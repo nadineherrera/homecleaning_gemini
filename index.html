@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Home Management System</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homestead | Full Maintenance System</title>
   <style>
     :root {
       --bg: #fcfaf7;
@@ -15,11 +15,7 @@
       --accent-light: #e0d8cc;
       --success: #6b8e61;
       --border: #e3ddd3;
-      --shadow: 0 12px 40px rgba(0, 0, 0, 0.04);
-      --radius: 24px;
-      --radius-sm: 12px;
-      --max: 1200px;
-      transition: all 0.3s ease;
+      --shadow: 0 12px 40px rgba(0, 0, 0, 0.05);
     }
 
     [data-theme="dark"] {
@@ -29,175 +25,74 @@
       --text: #e0dcd5;
       --muted: #a09a90;
       --border: #3d3a35;
-      --shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding-bottom: 100px; }
 
-    body {
-      margin: 0;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-    }
-
-    /* --- Navigation & Progress --- */
     header {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
-      z-index: 100;
-      padding: 12px 0;
+      z-index: 1000;
+      padding: 10px 0;
     }
 
-    .top-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .brand-group { display: flex; align-items: center; gap: 12px; }
+    .container { width: min(1200px, calc(100% - 40px)); margin: 0 auto; }
     
-    .progress-container {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
+    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .logo { font-weight: 900; letter-spacing: 1px; font-size: 1.1rem; }
+    
+    .stats { display: flex; align-items: center; gap: 15px; }
+    .progress-box { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--accent); font-size: 0.75rem; }
+    .bar-bg { width: 80px; height: 6px; background: var(--surface-2); border-radius: 10px; overflow: hidden; }
+    #bar-fill { height: 100%; width: 0%; background: var(--success); transition: 0.4s ease; }
 
-    .progress-bar-bg {
-      width: 100px;
-      height: 8px;
-      background: var(--surface-2);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    #progress-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--success);
-      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    nav {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      scrollbar-width: none;
-    }
+    nav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
     nav::-webkit-scrollbar { display: none; }
-
-    nav a {
-      white-space: nowrap;
-      text-decoration: none;
-      color: var(--muted);
-      padding: 8px 16px;
-      border-radius: 99px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      border: 1px solid transparent;
+    nav a { 
+      white-space: nowrap; text-decoration: none; color: var(--muted); 
+      background: var(--surface-2); padding: 6px 14px; border-radius: 50px; 
+      font-size: 0.8rem; font-weight: 600; border: 1px solid var(--border);
     }
+    nav a:hover { border-color: var(--accent); color: var(--accent); }
 
-    nav a:hover { background: var(--surface-2); }
-    nav a.active { background: var(--accent); color: white; }
+    .hero { padding: 30px 0; border-bottom: 1px solid var(--border); margin-bottom: 30px; }
+    .hero h1 { margin: 0; font-size: 2rem; letter-spacing: -1px; }
+    .hero p { color: var(--muted); margin: 5px 0 0; }
 
-    /* --- Layout Components --- */
-    .container { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+    .section-head { margin: 50px 0 20px; scroll-margin-top: 140px; border-left: 4px solid var(--accent); padding-left: 15px; }
+    .section-head h2 { margin: 0; font-size: 1.5rem; }
+    .section-head p { margin: 0; color: var(--muted); font-size: 0.9rem; }
 
-    .hero { padding: 60px 0 40px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
     
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
-      box-shadow: var(--shadow);
-      margin-bottom: 24px;
-    }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 20px; box-shadow: var(--shadow); height: fit-content; }
+    .card h3 { margin: 0 0 15px; font-size: 1rem; color: var(--accent); display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--surface-2); padding-bottom: 10px; }
+    
+    .task { display: flex; align-items: flex-start; gap: 10px; padding: 8px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+    .task:hover { background: var(--surface-2); }
+    .box { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; margin-top: 2px; background: white; position: relative; }
+    
+    .task.done .box { background: var(--success); border-color: var(--success); }
+    .task.done .box::after { content: '✓'; color: white; position: absolute; top: -2px; left: 2px; font-size: 12px; font-weight: bold; }
+    .task.done span { text-decoration: line-through; opacity: 0.5; }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
+    /* Special Styling */
+    .method-card { background: var(--accent); color: white; border: none; }
+    .method-card h3 { color: white; border-color: rgba(255,255,255,0.2); }
+    .method-card .box { background: transparent; border-color: rgba(255,255,255,0.5); }
+    .method-card .task:hover { background: rgba(255,255,255,0.1); }
+    
+    .flow-card { background: var(--surface-2); border: 2px dashed var(--border); }
 
-    /* --- Interactive Task Lists --- */
-    .task-list { list-style: none; padding: 0; margin: 0; }
+    .tag { font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: var(--accent-light); color: var(--accent); text-transform: uppercase; }
 
-    .task-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 12px;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: background 0.2s;
-      border: 1px solid transparent;
-    }
-
-    .task-item:hover { background: var(--surface-2); }
-
-    .checkbox {
-      width: 20px;
-      height: 20px;
-      border: 2px solid var(--accent);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 2px;
-      transition: all 0.2s;
-    }
-
-    .task-item.done .checkbox {
-      background: var(--success);
-      border-color: var(--success);
-    }
-
-    .task-item.done .checkbox::after {
-      content: '✓';
-      color: white;
-      font-size: 12px;
-    }
-
-    .task-item.done span {
-      text-decoration: line-through;
-      color: var(--muted);
-    }
-
-    .theme-toggle {
-      background: var(--surface-2);
-      border: none;
-      padding: 8px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.2rem;
-    }
-
-    h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); letter-spacing: -0.02em; margin-bottom: 16px; }
-    h2 { font-size: 1.25rem; margin-top: 0; display: flex; align-items: center; gap: 8px; }
-
-    .badge {
-      background: var(--accent-light);
-      color: var(--accent);
-      padding: 4px 12px;
-      border-radius: 99px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    @media (max-width: 768px) {
-      .hero { padding: 30px 0; }
-      .card { padding: 20px; }
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.5rem; }
+      .grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -205,25 +100,27 @@
 
 <header>
   <div class="container">
-    <div class="top-nav">
-      <div class="brand-group">
-        <div style="font-weight: 800; font-size: 1.1rem;">HOMESTEAD</div>
-        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-      </div>
-      <div class="progress-container">
-        <span id="progress-text">0% DONE</span>
-        <div class="progress-bar-bg">
-          <div id="progress-fill"></div>
+    <div class="header-top">
+      <div class="logo">HOMESTEAD</div>
+      <div class="stats">
+        <div class="progress-box">
+          <span id="p-text">0%</span>
+          <div class="bar-bg"><div id="bar-fill"></div></div>
         </div>
+        <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.1rem;">🌓</button>
       </div>
     </div>
     <nav>
-      <a href="#daily" class="active">Daily</a>
+      <a href="#daily">Daily</a>
       <a href="#weekly">Weekly</a>
+      <a href="#biweekly">Biweekly</a>
       <a href="#monthly">Monthly</a>
-      <a href="#maintenance">Systems</a>
-      <a href="#yard">Outdoor</a>
-      <button onclick="resetTasks()" style="margin-left:auto; border:none; background:none; color:var(--accent); cursor:pointer; font-size:0.8rem;">Reset All</button>
+      <a href="#quarterly">Quarterly</a>
+      <a href="#annual">Annual</a>
+      <a href="#yard">Yard</a>
+      <a href="#business">Business</a>
+      <a href="#flow" style="background: var(--accent); color: white;">Weekly Flow</a>
+      <button onclick="resetAll()" style="border:none; background:none; color:var(--accent); font-weight:bold; cursor:pointer; padding:0 10px;">Reset</button>
     </nav>
   </div>
 </header>
@@ -231,135 +128,269 @@
 <main class="container">
   <section class="hero">
     <h1>The Household Rhythm</h1>
-    <p style="color: var(--muted); max-width: 600px;">A family of 3 + 3 cats maintenance system. Focus on the routine to eliminate the "exhausting reset weekend."</p>
+    <p>3 Bedrooms • 2 Baths • 3 Cats • Basement Business • Yard</p>
   </section>
 
+  <div id="daily" class="section-head">
+    <h2>Daily Maintenance</h2>
+    <p>Small habits to eliminate deep-clean weekends.</p>
+  </div>
   <div class="grid">
-    <section id="daily" class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2>✨ Nightly Reset</h2>
-        <span class="badge">10 Mins</span>
-      </div>
-      <div class="task-list" id="nightly-tasks">
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="checkbox"></div>
-          <span>Load dishwasher & wipe counters</span>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="checkbox"></div>
-          <span>10-min clutter pickup (living room)</span>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="checkbox"></div>
-          <span>Scoop litter boxes & shake mats</span>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="checkbox"></div>
-          <span>Wipe bathroom sink</span>
-        </div>
-      </div>
-    </section>
+    <div class="card">
+      <h3>✨ Nightly 10-Min Reset</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Load dishwasher / Wash dishes</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Wipe counters & stove</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Put food away</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Quick sweep kitchen floor</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Pick up clutter & fold blankets</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Straighten pillows</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Scoop litter boxes & shake mats</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Wipe bathroom sink & straighten towels</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Move laundry to dryer or fold small load</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Entry / Kitchen sweep</span></div>
+    </div>
+    <div class="card">
+      <h3>🐾 Pet & Kitchen (Daily)</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Wash dishes / Run dishwasher</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Wipe counters & stovetop</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Sweep crumbs</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Scoop litter boxes</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Sweep litter area</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Small load of laundry</span></div>
+    </div>
+  </div>
 
-    <section id="bath" class="card" style="background: var(--accent); color: white; border: none;">
-      <h2>🧼 20-Min Bathroom</h2>
-      <p style="opacity: 0.9; font-size: 0.9rem;">The "Spray-First" Method</p>
-      <div class="task-list">
-        <div class="task-item" onclick="toggleTask(this)" style="color: white;">
-          <div class="checkbox" style="border-color: white;"></div>
-          <span>Spray all surfaces (let sit)</span>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)" style="color: white;">
-          <div class="checkbox" style="border-color: white;"></div>
-          <span>Clean mirrors & lights</span>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)" style="color: white;">
-          <div class="checkbox" style="border-color: white;"></div>
-          <span>Scrub tub & toilet</span>
-        </div>
-      </div>
-    </section>
+  <div id="weekly" class="section-head">
+    <h2>Weekly Standard</h2>
+    <p>Resetting the house for the week ahead.</p>
+  </div>
+  <div class="grid">
+    <div class="card method-card">
+      <h3>🧽 20-Min Bathroom Method</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Spray shower, tub, sink, toilet (Let sit)</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean mirrors & light fixtures</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Wipe sink & counters</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Scrub shower & tub</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean toilet (bowl, seat, base)</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Mop floor on the way out</span></div>
+    </div>
+    <div class="card">
+      <h3>🏠 House & Kitchen</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Mop kitchen floor</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean microwave interior</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Wipe appliance fronts</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Change bedding</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Vacuum bedrooms & main floors</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Vacuum rugs & furniture</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Dust furniture surfaces</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Vacuum & clean around litter boxes</span></div>
+    </div>
+  </div>
 
-    <section id="maintenance" class="card">
-      <h2>⚙️ Home Systems</h2>
-      <div class="task-list">
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="checkbox"></div>
-          <span>Check HVAC filters (Monthly)</span>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="checkbox"></div>
-          <span>Clean dryer vent (Bi-Annual)</span>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="checkbox"></div>
-          <span>Flush water heater (Annual)</span>
-        </div>
-      </div>
-    </section>
+  <div id="biweekly" class="section-head">
+    <h2>Biweekly</h2>
+    <p>Every two weeks tasks.</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>🔍 Detail Cleaning</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Vacuum under furniture edges</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean baseboards (high traffic)</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Wash pet bedding</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean window sills</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Wipe interior doors & handles</span></div>
+    </div>
+  </div>
+
+  <div id="monthly" class="section-head">
+    <h2>Monthly Deep Dive</h2>
+    <p>Focus on systems and hidden areas.</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>🧼 Deep Clean Items</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean fridge shelves & door seals</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean dishwasher filter</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean oven interior</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean bathroom drains & grout scrub</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Dust air vents & air returns</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Wash trash cans</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Vacuum behind toilets</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Deep clean litter area & wash mats</span></div>
+    </div>
+    <div class="card">
+      <h3>🛠️ Critical Maintenance</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Replace/Clean HVAC filter</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Test smoke & CO detectors</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Check for plumbing leaks (sinks/toilets)</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Inspect basement for moisture/pests</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Inspect washing machine hoses</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Check sump pump pit</span></div>
+    </div>
+  </div>
+
+  <div id="quarterly" class="section-head">
+    <h2>Quarterly & Seasonal</h2>
+    <p>Once every 3-4 months.</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>🛋️ Rare Deep Cleans</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Wash walls (high traffic) & mop walls</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean baseboards throughout house</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean window tracks & blinds</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Wash curtains</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Move furniture and vacuum underneath</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean behind fridge & stove</span></div>
+    </div>
+    <div class="card">
+      <h3>📦 Garage & Systems</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Sweep garage floor & organize tools</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean fridge coils</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Inspect caulking (tubs/showers)</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Run ice/citrus through disposal</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Check water heater for leaks/rust</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean AC condensate drain line</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Test GFCI outlets</span></div>
+    </div>
+  </div>
+
+  <div id="annual" class="section-head">
+    <h2>Twice Per Year & Annual</h2>
+    <p>Big picture home preservation.</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>📅 Every 6 Months</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Flush water heater</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean dryer vent and duct</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean gutters & yard debris cleanup</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Pressure wash exterior surfaces</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Check weather stripping (doors/windows)</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Lubricate garage door tracks</span></div>
+    </div>
+    <div class="card">
+      <h3>🏆 Once Per Year</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Professional HVAC service</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Inspect roof, chimney, & siding</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Wash interior & exterior windows</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Deep clean basement & garage walls</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Clean inside cabinets & closets</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Inspect attic insulation & ventilation</span></div>
+    </div>
+  </div>
+
+  <div id="yard" class="section-head">
+    <h2>Yard Maintenance</h2>
+    <p>Curb appeal and drainage.</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>🌳 Weekly & Monthly</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Mow lawn & pick up debris (Weekly)</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Trim plants & weed garden beds (Monthly)</span></div>
+    </div>
+    <div class="card">
+      <h3>🍂 Seasonal</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Mulch beds</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Leaf cleanup</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Check yard drainage</span></div>
+    </div>
+  </div>
+
+  <div id="business" class="section-head">
+    <h2>Basement Business</h2>
+    <p>Workspace and inventory management.</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>💼 Business Workspace</h3>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Organize supplies & wipe tables (Weekly)</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Sweep basement floor (Weekly)</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Inventory supplies & declutter bins (Monthly)</span></div>
+      <div class="task" onclick="toggle(this)"><div class="box"></div><span>Deep clean workspace & cobwebs (Quarterly)</span></div>
+    </div>
+  </div>
+
+  <div id="flow" class="section-head">
+    <h2>Weekly Flow Schedule</h2>
+    <p>Your 7-day plan.</p>
+  </div>
+  <div class="grid">
+    <div class="card flow-card">
+      <h3>Monday</h3><div class="task" onclick="toggle(this)"><div class="box"></div><span>Laundry & Business Tasks</span></div>
+    </div>
+    <div class="card flow-card">
+      <h3>Tuesday</h3><div class="task" onclick="toggle(this)"><div class="box"></div><span>Bathroom Cleaning Method</span></div>
+    </div>
+    <div class="card flow-card">
+      <h3>Wednesday</h3><div class="task" onclick="toggle(this)"><div class="box"></div><span>Floors (Vacuum + Mop)</span></div>
+    </div>
+    <div class="card flow-card">
+      <h3>Thursday</h3><div class="task" onclick="toggle(this)"><div class="box"></div><span>Bedrooms + Laundry</span></div>
+    </div>
+    <div class="card flow-card">
+      <h3>Friday</h3><div class="task" onclick="toggle(this)"><div class="box"></div><span>Grocery + Full House Reset</span></div>
+    </div>
+    <div class="card flow-card">
+      <h3>Saturday</h3><div class="task" onclick="toggle(this)"><div class="box"></div><span>Yard Work</span></div>
+    </div>
+    <div class="card flow-card">
+      <h3>Sunday</h3><div class="task" onclick="toggle(this)"><div class="box"></div><span>Meal Prep + Planning</span></div>
+    </div>
   </div>
 </main>
 
 <script>
-  // Toggle Task Completion
-  function toggleTask(element) {
-    element.classList.toggle('done');
+  // Assign stable IDs to all tasks
+  document.querySelectorAll('.task').forEach((t, i) => t.id = 'task-' + i);
+
+  function toggle(el) {
+    el.classList.toggle('done');
     updateProgress();
-    saveState();
+    saveProgress();
   }
 
-  // Update Progress Bar
   function updateProgress() {
-    const total = document.querySelectorAll('.task-item').length;
-    const done = document.querySelectorAll('.task-item.done').length;
-    const percent = Math.round((done / total) * 100);
-    
-    document.getElementById('progress-fill').style.width = percent + '%';
-    document.getElementById('progress-text').innerText = percent + '% DONE';
+    const total = document.querySelectorAll('.task').length;
+    const done = document.querySelectorAll('.task.done').length;
+    const p = Math.round((done / total) * 100);
+    document.getElementById('bar-fill').style.width = p + '%';
+    document.getElementById('p-text').innerText = p + '%';
   }
 
-  // Save progress to LocalStorage
-  function saveState() {
-    const tasks = [];
-    document.querySelectorAll('.task-item span').forEach((task, index) => {
-      tasks.push({
-        text: task.innerText,
-        done: task.parentElement.classList.contains('done')
-      });
+  function saveProgress() {
+    const data = {};
+    document.querySelectorAll('.task').forEach(t => {
+      data[t.id] = t.classList.contains('done');
     });
-    localStorage.setItem('homestead-tasks', JSON.stringify(tasks));
+    localStorage.setItem('homestead_v2', JSON.stringify(data));
   }
 
-  // Load progress on startup
-  function loadState() {
-    const saved = localStorage.getItem('homestead-tasks');
-    if (saved) {
-      const tasks = JSON.parse(saved);
-      document.querySelectorAll('.task-item').forEach((item, index) => {
-        if (tasks[index] && tasks[index].done) {
-          item.classList.add('done');
-        }
-      });
+  function loadProgress() {
+    const saved = JSON.parse(localStorage.getItem('homestead_v2') || '{}');
+    for (const id in saved) {
+      const el = document.getElementById(id);
+      if (el && saved[id]) el.classList.add('done');
+    }
+    updateProgress();
+  }
+
+  function resetAll() {
+    if(confirm('Clear all progress?')) {
+      document.querySelectorAll('.task').forEach(t => t.classList.remove('done'));
+      localStorage.removeItem('homestead_v2');
       updateProgress();
     }
   }
 
-  // Reset Everything
-  function resetTasks() {
-    if(confirm('Reset all progress for a new week?')) {
-      document.querySelectorAll('.task-item').forEach(item => item.classList.remove('done'));
-      updateProgress();
-      saveState();
-    }
-  }
-
-  // Dark Mode Toggle
   function toggleTheme() {
-    const body = document.documentElement;
-    const current = body.getAttribute('data-theme');
-    body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
   }
 
-  window.onload = loadState;
+  window.onload = loadProgress;
 </script>
 
 </body>
