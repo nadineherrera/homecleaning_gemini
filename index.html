@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home Management System</title>
+  <style>
+    :root {
+      --bg: #fcfaf7;
+      --surface: #ffffff;
+      --surface-2: #f4f1eb;
+      --text: #2d2a26;
+      --muted: #706a61;
+      --accent: #8f7a5a;
+      --accent-light: #e0d8cc;
+      --success: #6b8e61;
+      --border: #e3ddd3;
+      --shadow: 0 12px 40px rgba(0, 0, 0, 0.04);
+      --radius: 24px;
+      --radius-sm: 12px;
+      --max: 1200px;
+      transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1917;
+      --surface: #242320;
+      --surface-2: #2d2b28;
+      --text: #e0dcd5;
+      --muted: #a09a90;
+      --border: #3d3a35;
+      --shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* --- Navigation & Progress --- */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 12px 0;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .brand-group { display: flex; align-items: center; gap: 12px; }
+    
+    .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .progress-bar-bg {
+      width: 100px;
+      height: 8px;
+      background: var(--surface-2);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    #progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--success);
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    nav::-webkit-scrollbar { display: none; }
+
+    nav a {
+      white-space: nowrap;
+      text-decoration: none;
+      color: var(--muted);
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: 1px solid transparent;
+    }
+
+    nav a:hover { background: var(--surface-2); }
+    nav a.active { background: var(--accent); color: white; }
+
+    /* --- Layout Components --- */
+    .container { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+
+    .hero { padding: 60px 0 40px; }
+    
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    /* --- Interactive Task Lists --- */
+    .task-list { list-style: none; padding: 0; margin: 0; }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .task-item:hover { background: var(--surface-2); }
+
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--accent);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: all 0.2s;
+    }
+
+    .task-item.done .checkbox {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .task-item.done .checkbox::after {
+      content: '✓';
+      color: white;
+      font-size: 12px;
+    }
+
+    .task-item.done span {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .theme-toggle {
+      background: var(--surface-2);
+      border: none;
+      padding: 8px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); letter-spacing: -0.02em; margin-bottom: 16px; }
+    h2 { font-size: 1.25rem; margin-top: 0; display: flex; align-items: center; gap: 8px; }
+
+    .badge {
+      background: var(--accent-light);
+      color: var(--accent);
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 768px) {
+      .hero { padding: 30px 0; }
+      .card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="top-nav">
+      <div class="brand-group">
+        <div style="font-weight: 800; font-size: 1.1rem;">HOMESTEAD</div>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+      </div>
+      <div class="progress-container">
+        <span id="progress-text">0% DONE</span>
+        <div class="progress-bar-bg">
+          <div id="progress-fill"></div>
+        </div>
+      </div>
+    </div>
+    <nav>
+      <a href="#daily" class="active">Daily</a>
+      <a href="#weekly">Weekly</a>
+      <a href="#monthly">Monthly</a>
+      <a href="#maintenance">Systems</a>
+      <a href="#yard">Outdoor</a>
+      <button onclick="resetTasks()" style="margin-left:auto; border:none; background:none; color:var(--accent); cursor:pointer; font-size:0.8rem;">Reset All</button>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <h1>The Household Rhythm</h1>
+    <p style="color: var(--muted); max-width: 600px;">A family of 3 + 3 cats maintenance system. Focus on the routine to eliminate the "exhausting reset weekend."</p>
+  </section>
+
+  <div class="grid">
+    <section id="daily" class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>✨ Nightly Reset</h2>
+        <span class="badge">10 Mins</span>
+      </div>
+      <div class="task-list" id="nightly-tasks">
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="checkbox"></div>
+          <span>Load dishwasher & wipe counters</span>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="checkbox"></div>
+          <span>10-min clutter pickup (living room)</span>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="checkbox"></div>
+          <span>Scoop litter boxes & shake mats</span>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="checkbox"></div>
+          <span>Wipe bathroom sink</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="bath" class="card" style="background: var(--accent); color: white; border: none;">
+      <h2>🧼 20-Min Bathroom</h2>
+      <p style="opacity: 0.9; font-size: 0.9rem;">The "Spray-First" Method</p>
+      <div class="task-list">
+        <div class="task-item" onclick="toggleTask(this)" style="color: white;">
+          <div class="checkbox" style="border-color: white;"></div>
+          <span>Spray all surfaces (let sit)</span>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)" style="color: white;">
+          <div class="checkbox" style="border-color: white;"></div>
+          <span>Clean mirrors & lights</span>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)" style="color: white;">
+          <div class="checkbox" style="border-color: white;"></div>
+          <span>Scrub tub & toilet</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="maintenance" class="card">
+      <h2>⚙️ Home Systems</h2>
+      <div class="task-list">
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="checkbox"></div>
+          <span>Check HVAC filters (Monthly)</span>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="checkbox"></div>
+          <span>Clean dryer vent (Bi-Annual)</span>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="checkbox"></div>
+          <span>Flush water heater (Annual)</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+  // Toggle Task Completion
+  function toggleTask(element) {
+    element.classList.toggle('done');
+    updateProgress();
+    saveState();
+  }
+
+  // Update Progress Bar
+  function updateProgress() {
+    const total = document.querySelectorAll('.task-item').length;
+    const done = document.querySelectorAll('.task-item.done').length;
+    const percent = Math.round((done / total) * 100);
+    
+    document.getElementById('progress-fill').style.width = percent + '%';
+    document.getElementById('progress-text').innerText = percent + '% DONE';
+  }
+
+  // Save progress to LocalStorage
+  function saveState() {
+    const tasks = [];
+    document.querySelectorAll('.task-item span').forEach((task, index) => {
+      tasks.push({
+        text: task.innerText,
+        done: task.parentElement.classList.contains('done')
+      });
+    });
+    localStorage.setItem('homestead-tasks', JSON.stringify(tasks));
+  }
+
+  // Load progress on startup
+  function loadState() {
+    const saved = localStorage.getItem('homestead-tasks');
+    if (saved) {
+      const tasks = JSON.parse(saved);
+      document.querySelectorAll('.task-item').forEach((item, index) => {
+        if (tasks[index] && tasks[index].done) {
+          item.classList.add('done');
+        }
+      });
+      updateProgress();
+    }
+  }
+
+  // Reset Everything
+  function resetTasks() {
+    if(confirm('Reset all progress for a new week?')) {
+      document.querySelectorAll('.task-item').forEach(item => item.classList.remove('done'));
+      updateProgress();
+      saveState();
+    }
+  }
+
+  // Dark Mode Toggle
+  function toggleTheme() {
+    const body = document.documentElement;
+    const current = body.getAttribute('data-theme');
+    body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+  }
+
+  window.onload = loadState;
+</script>
+
+</body>
+</html>
